@@ -512,7 +512,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
                                     } else {
                                       // Выключаем: отменяем все 20
                                       for (int r = 0; r < 20; r++) {
-                                        await notif.notifications.cancel(
+                                        await notif.notifications.cancel(id: 
                                             (plan['id'] as String).hashCode +
                                                 1000 + r);
                                       }
