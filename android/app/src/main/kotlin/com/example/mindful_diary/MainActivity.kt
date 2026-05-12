@@ -13,26 +13,21 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        // ─── Виджет ───────────────────────────────────────────────────────
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, WIDGET_CHANNEL)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "updateWidget" -> {
                         val mgr = AppWidgetManager.getInstance(this)
-                        val ids = mgr.getAppWidgetIds(
-                            ComponentName(this, PlannerWidget::class.java)
-                        )
+                        val ids = mgr.getAppWidgetIds(ComponentName(this, PlannerWidget::class.java))
                         for (id in ids) PlannerWidget.updateWidget(this, mgr, id)
                         result.success(null)
                     }
                     "checkOpenPlanner" -> {
-                        // Возвращает true если нужно открыть планировщик
                         val open = intent.getBooleanExtra("open_planner", false)
                         if (open) intent.removeExtra("open_planner")
                         result.success(open)
                     }
                     "checkAddPlan" -> {
-                        // Возвращает true если нужно сразу открыть форму добавления
                         val add = intent.getBooleanExtra("add_plan", false)
                         if (add) intent.removeExtra("add_plan")
                         result.success(add)
@@ -41,12 +36,11 @@ class MainActivity : FlutterActivity() {
                 }
             }
 
-        // ─── Будильник ────────────────────────────────────────────────────
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ALARM_CHANNEL)
             .setMethodCallHandler { call, result ->
                 if (call.method == "setAlarm") {
-                    val hour    = call.argument<Int>("hour")    ?: 0
-                    val minute  = call.argument<Int>("minute")  ?: 0
+                    val hour    = call.argument<Int>("hour")       ?: 0
+                    val minute  = call.argument<Int>("minute")     ?: 0
                     val message = call.argument<String>("message") ?: ""
                     val alarmIntent = android.content.Intent(
                         android.provider.AlarmClock.ACTION_SET_ALARM
